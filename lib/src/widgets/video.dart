@@ -103,6 +103,7 @@ class Video extends StatefulWidget {
     this.filterQuality = FilterQuality.low,
     this.showFullscreenButton = false,
     this.fillColor: Colors.black,
+    required this.enterFullscreen,
   })  : player = player ?? players[playerId]! as Player,
         super(key: key);
 
@@ -177,6 +178,8 @@ class Video extends StatefulWidget {
   /// Fill color.
   final Color fillColor;
 
+  final Function enterFullscreen;
+
   _VideoStateBase createState() => _VideoStateTexture();
 }
 
@@ -192,52 +195,52 @@ abstract class _VideoStateBase extends State<Video>
     if (widget.showControls) controls[playerId] = controlKey;
   }
 
-  void enterFullscreen() async {
-    await windowManager.ensureInitialized();
-    await windowManager.setFullScreen(true);
-    Navigator.of(context, rootNavigator: true).push(
-      PageRouteBuilder(
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-        pageBuilder: (_, __, ___) => Scaffold(
-          body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: widget.fillColor,
-            child: widget.showControls
-                ? Control(
-                    player: widget.player,
-                    enterFullscreen: enterFullscreen,
-                    exitFullscreen: exitFullscreen,
-                    isFullscreen: true,
-                    showFullscreenButton: widget.showFullscreenButton,
-                    progressBarThumbRadius: widget.progressBarThumbRadius,
-                    progressBarThumbGlowRadius:
-                        widget.progressBarThumbGlowRadius,
-                    progressBarActiveColor: widget.progressBarActiveColor,
-                    progressBarInactiveColor: widget.progressBarInactiveColor,
-                    progressBarThumbColor: widget.progressBarThumbColor,
-                    progressBarThumbGlowColor: widget.progressBarThumbGlowColor,
-                    volumeActiveColor: widget.volumeActiveColor,
-                    volumeInactiveColor: widget.volumeInactiveColor,
-                    volumeBackgroundColor: widget.volumeBackgroundColor,
-                    volumeThumbColor: widget.volumeThumbColor,
-                    showTimeLeft: widget.showTimeLeft,
-                    progressBarTextStyle: widget.progressBarTextStyle,
-                    child: present(),
-                  )
-                : present(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void exitFullscreen() async {
-    await windowManager.ensureInitialized();
-    await windowManager.setFullScreen(false);
-    Navigator.of(context, rootNavigator: false).pop();
-  }
+  // void enterFullscreen() async {
+  //   await windowManager.ensureInitialized();
+  //   await windowManager.setFullScreen(true);
+  //   Navigator.of(context, rootNavigator: true).push(
+  //     PageRouteBuilder(
+  //       transitionDuration: Duration.zero,
+  //       reverseTransitionDuration: Duration.zero,
+  //       pageBuilder: (_, __, ___) => Scaffold(
+  //         body: Container(
+  //           height: double.infinity,
+  //           width: double.infinity,
+  //           color: widget.fillColor,
+  //           child: widget.showControls
+  //               ? Control(
+  //                   player: widget.player,
+  //                   enterFullscreen: enterFullscreen,
+  //                   exitFullscreen: exitFullscreen,
+  //                   isFullscreen: true,
+  //                   showFullscreenButton: widget.showFullscreenButton,
+  //                   progressBarThumbRadius: widget.progressBarThumbRadius,
+  //                   progressBarThumbGlowRadius:
+  //                       widget.progressBarThumbGlowRadius,
+  //                   progressBarActiveColor: widget.progressBarActiveColor,
+  //                   progressBarInactiveColor: widget.progressBarInactiveColor,
+  //                   progressBarThumbColor: widget.progressBarThumbColor,
+  //                   progressBarThumbGlowColor: widget.progressBarThumbGlowColor,
+  //                   volumeActiveColor: widget.volumeActiveColor,
+  //                   volumeInactiveColor: widget.volumeInactiveColor,
+  //                   volumeBackgroundColor: widget.volumeBackgroundColor,
+  //                   volumeThumbColor: widget.volumeThumbColor,
+  //                   showTimeLeft: widget.showTimeLeft,
+  //                   progressBarTextStyle: widget.progressBarTextStyle,
+  //                   child: present(),
+  //                 )
+  //               : present(),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // void exitFullscreen() async {
+  //   await windowManager.ensureInitialized();
+  //   await windowManager.setFullScreen(false);
+  //   Navigator.of(context, rootNavigator: false).pop();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -250,8 +253,12 @@ abstract class _VideoStateBase extends State<Video>
           ? Control(
               key: controlKey,
               player: widget.player,
-              enterFullscreen: enterFullscreen,
-              exitFullscreen: exitFullscreen,
+              enterFullscreen: () {
+                widget.enterFullscreen();
+              },
+              exitFullscreen: () {
+                widget.enterFullscreen();
+              },
               isFullscreen: false,
               showFullscreenButton: widget.showFullscreenButton,
               progressBarThumbRadius: widget.progressBarThumbRadius,

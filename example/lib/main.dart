@@ -85,6 +85,7 @@ class DartVLCExampleState extends State<DartVLCExample> {
       isTablet = false;
       isPhone = true;
     }
+    int  a = 0;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -100,23 +101,28 @@ class DartVLCExampleState extends State<DartVLCExample> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Platform.isWindows
-                    ? NativeVideo(
-                        player: player,
-                        width: isPhone ? 320 : 640,
-                        height: isPhone ? 180 : 360,
-                        volumeThumbColor: Colors.blue,
-                        volumeActiveColor: Colors.blue,
-                        showControls: !isPhone,
-                      )
-                    : Video(
-                        player: player,
-                        width: isPhone ? 320 : 640,
-                        height: isPhone ? 180 : 360,
-                        volumeThumbColor: Colors.blue,
-                        volumeActiveColor: Colors.blue,
-                        showControls: !isPhone,
-                      ),
+                // Platform.isWindows
+                //     ?
+                // NativeVideo(
+                //         player: player,
+                //         width: isPhone ? 320 : 640,
+                //         height: isPhone ? 180 : 360,
+                //         volumeThumbColor: Colors.blue,
+                //         volumeActiveColor: Colors.blue,
+                //         showControls: !isPhone,
+                //       )
+                Video(
+                  enterFullscreen: (){
+
+                  },
+                  showFullscreenButton: true,
+                  player: player,
+                  width: isPhone ? 320 : 640,
+                  height: isPhone ? 180 : 360,
+                  volumeThumbColor: Colors.blue,
+                  volumeActiveColor: Colors.blue,
+                  showControls: !isPhone,
+                ),
               ],
             ),
             Row(
